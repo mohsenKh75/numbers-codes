@@ -1,24 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 //import Image from "../../components/image/image";
 //import Link from "../../components/Link/mLink";
 //import Logo from "../../logo.svg";
 
+const FIELD_NAMES = {
+  first: "first",
+  second: "second",
+  third: "third",
+  fourth: "fourth",
+};
+
+const FIELD_ARR = Object.keys(FIELD_NAMES);
+
 function PasswordField() {
+  const inputRefs = {
+    first: useRef(),
+    second: useRef(),
+    third: useRef(),
+    fourth: useRef(),
+  };
+
   const [password, setPassword] = useState({
     first: "",
     second: "",
     third: "",
-    forth: "",
+    fourth: "",
   });
-  let first = password.first,
-    second = password.second,
-    third = password.third,
-    forth = password.forth;
+
   function passHandler(evt, name) {
-    let value = evt.target.value;
-    setPassword({ ...password, [evt.target.name]: value });
+    const {
+      target: { value },
+    } = evt;
+
+    const nextInputIndex = FIELD_ARR.indexOf(name) + 1;
+    const nextInput = FIELD_ARR[nextInputIndex];
+
+    if (!!value) {
+      inputRefs[name]?.current?.blur?.();
+      inputRefs[nextInput]?.current?.focus?.();
+    }
+
+    setPassword((prevState) => ({ ...prevState, [name]: value }));
   }
+
+  const onSubmit = () => {
+    const result = `${password.first}${password.second}${password.third}${password.fourth}`;
+    console.log("result", result);
+  };
 
   return (
     <div className="min-vh-100 py-3 bg-primary d-flex justify-content-center align-items-center">
@@ -52,9 +81,13 @@ function PasswordField() {
                             placeholder=""
                             style={{ alignContent: "middle" }}
                             required
-                            name={first}
-                            value={first}
-                            onChange={(evt, first) => passHandler(evt, first)}
+                            name={FIELD_NAMES.first}
+                            value={password.first}
+                            onChange={(evt) =>
+                              passHandler(evt, FIELD_NAMES.first)
+                            }
+                            maxLength={1}
+                            ref={inputRefs.first}
                           />
                         </Form.Group>
                       </div>
@@ -66,6 +99,13 @@ function PasswordField() {
                             type="text"
                             placeholder=""
                             required
+                            name={FIELD_NAMES.second}
+                            value={password.second}
+                            onChange={(evt) =>
+                              passHandler(evt, FIELD_NAMES.second)
+                            }
+                            maxLength={1}
+                            ref={inputRefs.second}
                           />
                         </Form.Group>
                       </div>
@@ -77,6 +117,13 @@ function PasswordField() {
                             type="text"
                             placeholder=""
                             required
+                            name={FIELD_NAMES.third}
+                            value={password.third}
+                            onChange={(evt) =>
+                              passHandler(evt, FIELD_NAMES.third)
+                            }
+                            maxLength={1}
+                            ref={inputRefs.third}
                           />
                         </Form.Group>
                       </div>
@@ -88,6 +135,13 @@ function PasswordField() {
                             type="text"
                             placeholder=""
                             required
+                            name={FIELD_NAMES.fourth}
+                            value={password.fourth}
+                            onChange={(evt) =>
+                              passHandler(evt, FIELD_NAMES.fourth)
+                            }
+                            maxLength={1}
+                            ref={inputRefs.fourth}
                           />
                         </Form.Group>
                       </div>
@@ -105,6 +159,7 @@ function PasswordField() {
                       type="submit"
                       size="lg"
                       className="rounded-pill w-100 text-light"
+                      onClick={onSubmit}
                     >
                       ثبت‌نام
                     </Button>
